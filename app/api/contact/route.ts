@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
 
-const LEADS_FILE = path.join(process.cwd(), "data", "leads.json");
+const SUPABASE_URL = "https://nfhesgwmbgmztjxuvrvy.supabase.co";
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5maGVzZ3dtYmdtenRqeHV2cnZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MzM1ODIsImV4cCI6MjA4ODMwOTU4Mn0.6Ma_cPPXq93gmjVSeHBsFw2KdgbkOAGRkj55X2Ry66g";
+const SUPABASE_SERVICE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5maGVzZ3dtYmdtenRqeHV2cnZ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjczMzU4MiwiZXhwIjoyMDg4MzA5NTgyfQ.TCpuvLGc0y2-3KOYunzoWfvVP3tiMd-JJtklC-tH8YY";
 
 function corsHeaders() {
   return {
@@ -35,7 +37,6 @@ export async function POST(request: NextRequest) {
     if (!email || typeof email !== "string" || email.trim().length === 0) {
       errors.push("Email is verplicht.");
     } else {
-      // Basic email format check
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email.trim())) {
         errors.push("Ongeldig email formaat.");
@@ -52,39 +53,49 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Build lead record
-    const lead = {
-      id: crypto.randomUUID(),
-      bedrijfsnaam: bedrijfsnaam.trim(),
-      naam: naam.trim(),
-      telefoon: telefoon.trim(),
+    // Insert lead into Supabase leads table
+    const leadData = {
+      company_name: bedrijfsnaam.trim(),
+      contact_name: naam.trim(),
+      phone: telefoon.trim(),
       email: email.trim().toLowerCase(),
-      sector: sector.trim(),
-      createdAt: new Date().toISOString(),
+      industry: sector.trim(),
+      source: "website",
+      status: "new",
+      score: 50,
+      country: "NL",
     };
 
-    // Read existing leads
-    let leads: unknown[] = [];
-    try {
-      const fileContent = await fs.readFile(LEADS_FILE, "utf-8");
-      leads = JSON.parse(fileContent);
-      if (!Array.isArray(leads)) {
-        leads = [];
-      }
-    } catch {
-      // File doesn't exist or is invalid — start fresh
-      leads = [];
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify(leadData),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Supabase insert failed:", response.status, errorText);
+      return NextResponse.json(
+        {
+          success: false,
+          errors: ["Er is een fout opgetreden. Probeer het later opnieuw."],
+        },
+        { status: 500, headers: corsHeaders() }
+      );
     }
 
-    // Append and write back
-    leads.push(lead);
-    await fs.writeFile(LEADS_FILE, JSON.stringify(leads, null, 2), "utf-8");
+    const inserted = await response.json();
 
     return NextResponse.json(
       {
         success: true,
         message: "Bedankt! Wij nemen binnen 24 uur contact met u op.",
-        leadId: lead.id,
+        leadId: inserted[0]?.id || null,
       },
       { status: 201, headers: corsHeaders() }
     );

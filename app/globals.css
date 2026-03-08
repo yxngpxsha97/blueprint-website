@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #0f172a;
+/* ═══ LIGHT (default) ═══ */
+:root,
+[data-theme="light"] {
+  --background: #F5F3EF;
+  --foreground: #111827;
+  --lime: #DBEAFE;
+  --lime-light: #EFF6FF;
+  --teal-accent: #3B82F6;
+  --teal-dark: #2563EB;
   --blue-50: #eff6ff;
   --blue-100: #dbeafe;
   --blue-200: #bfdbfe;
@@ -22,11 +28,179 @@
   --gray-700: #334155;
   --gray-800: #1e293b;
   --gray-900: #0f172a;
+  /* Dashboard-specific tokens */
+  --dash-bg: #F5F3EF;
+  --dash-header: rgba(255,255,255,0.9);
+  --dash-header-border: rgba(229,231,235,0.5);
+  --dash-card: #ffffff;
+  --dash-card-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  --dash-card-hover: 0 4px 16px rgba(0,0,0,0.08);
+  --dash-sidebar-bg: transparent;
+  --dash-sidebar-mobile: #F0EEEB;
+  --dash-text: #111827;
+  --dash-text-secondary: #6b7280;
+  --dash-text-muted: #9ca3af;
+  --dash-border: #e5e7eb;
+  --dash-col-contact: #ffffff;
+  --dash-col-upnext: #EFF6FF;
+  --dash-col-score: #F5F3FF;
+  --dash-task-row-1: #DBEAFE;
+  --dash-task-row-2: #BFDBFE;
+  --dash-input-bg: rgba(255,255,255,0.6);
+  --dash-badge-bg: #f3f4f6;
+  --dash-badge-text: #6b7280;
+  --dash-glow: rgba(59,130,246,0.3);
+  --dash-accent: #3B82F6;
+  --dash-accent-dark: #2563EB;
+  --dash-gauge-inactive: #D1D5DB;
+  --dash-score-text: #111827;
+  --dash-brand: #2563EB;
+  --dash-avatar-from: #60a5fa;
+  --dash-avatar-to: #2563eb;
+  --dash-active-bg: #dbeafe;
+  --dash-active-text: #1d4ed8;
+  --dash-active-icon: #2563eb;
+  --dash-hover-bg: rgba(255,255,255,0.5);
+  --dash-user-bg: #dbeafe;
+  --dash-user-border: rgba(191,219,254,0.6);
+  --dash-user-text: #1d4ed8;
+}
+
+/* ═══ DARK ═══ */
+[data-theme="dark"] {
+  --background: #111111;
+  --foreground: #f1f5f9;
+  --lime: #1e293b;
+  --lime-light: #1a1a2e;
+  --teal-accent: #60a5fa;
+  --teal-dark: #3b82f6;
+  --blue-50: #0f1729;
+  --blue-100: #172554;
+  --blue-200: #1e3a5f;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #93bbfd;
+  --blue-800: #bfdbfe;
+  --blue-900: #dbeafe;
+  --gray-50: #18181b;
+  --gray-100: #1e1e22;
+  --gray-200: #2a2a30;
+  --gray-300: #3f3f46;
+  --gray-400: #71717a;
+  --gray-500: #a1a1aa;
+  --gray-600: #d4d4d8;
+  --gray-700: #e4e4e7;
+  --gray-800: #f4f4f5;
+  --gray-900: #fafafa;
+  --dash-bg: #111111;
+  --dash-header: rgba(24,24,27,0.92);
+  --dash-header-border: rgba(63,63,70,0.5);
+  --dash-card: #1e1e22;
+  --dash-card-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  --dash-card-hover: 0 4px 16px rgba(0,0,0,0.4);
+  --dash-sidebar-bg: transparent;
+  --dash-sidebar-mobile: #18181b;
+  --dash-text: #f1f5f9;
+  --dash-text-secondary: #a1a1aa;
+  --dash-text-muted: #71717a;
+  --dash-border: #2a2a30;
+  --dash-col-contact: #1e1e22;
+  --dash-col-upnext: #141422;
+  --dash-col-score: #1a1528;
+  --dash-task-row-1: #172554;
+  --dash-task-row-2: #1e3a5f;
+  --dash-input-bg: rgba(30,30,34,0.8);
+  --dash-badge-bg: #2a2a30;
+  --dash-badge-text: #a1a1aa;
+  --dash-glow: rgba(96,165,250,0.35);
+  --dash-accent: #60a5fa;
+  --dash-accent-dark: #3b82f6;
+  --dash-gauge-inactive: #3f3f46;
+  --dash-score-text: #f1f5f9;
+  --dash-brand: #60a5fa;
+  --dash-avatar-from: #3b82f6;
+  --dash-avatar-to: #1d4ed8;
+  --dash-active-bg: #172554;
+  --dash-active-text: #93c5fd;
+  --dash-active-icon: #60a5fa;
+  --dash-hover-bg: rgba(255,255,255,0.05);
+  --dash-user-bg: #172554;
+  --dash-user-border: rgba(30,58,95,0.6);
+  --dash-user-text: #93c5fd;
+}
+
+/* ═══ DARK BLUE ═══ */
+[data-theme="dark-blue"] {
+  --background: #0a1628;
+  --foreground: #e2e8f0;
+  --lime: #1e3a5f;
+  --lime-light: #0f2340;
+  --teal-accent: #60a5fa;
+  --teal-dark: #3b82f6;
+  --blue-50: #0a1628;
+  --blue-100: #0f2340;
+  --blue-200: #1e3a5f;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #93bbfd;
+  --blue-800: #bfdbfe;
+  --blue-900: #dbeafe;
+  --gray-50: #0d1b2a;
+  --gray-100: #112240;
+  --gray-200: #1b3155;
+  --gray-300: #2a4a73;
+  --gray-400: #5a7da8;
+  --gray-500: #8baac8;
+  --gray-600: #b8d0e8;
+  --gray-700: #d1e3f5;
+  --gray-800: #e8f1fa;
+  --gray-900: #f0f6fc;
+  --dash-bg: #0a1628;
+  --dash-header: rgba(13,27,42,0.95);
+  --dash-header-border: rgba(27,49,85,0.5);
+  --dash-card: #112240;
+  --dash-card-shadow: 0 2px 10px rgba(0,0,0,0.35);
+  --dash-card-hover: 0 4px 16px rgba(0,0,0,0.45);
+  --dash-sidebar-bg: transparent;
+  --dash-sidebar-mobile: #0d1b2a;
+  --dash-text: #e2e8f0;
+  --dash-text-secondary: #8baac8;
+  --dash-text-muted: #5a7da8;
+  --dash-border: #1b3155;
+  --dash-col-contact: #112240;
+  --dash-col-upnext: #0d1f3c;
+  --dash-col-score: #111d3a;
+  --dash-task-row-1: #0f2340;
+  --dash-task-row-2: #1e3a5f;
+  --dash-input-bg: rgba(17,34,64,0.8);
+  --dash-badge-bg: #1b3155;
+  --dash-badge-text: #8baac8;
+  --dash-glow: rgba(96,165,250,0.4);
+  --dash-accent: #60a5fa;
+  --dash-accent-dark: #3b82f6;
+  --dash-gauge-inactive: #2a4a73;
+  --dash-score-text: #e2e8f0;
+  --dash-brand: #60a5fa;
+  --dash-avatar-from: #3b82f6;
+  --dash-avatar-to: #1e40af;
+  --dash-active-bg: #0f2340;
+  --dash-active-text: #93c5fd;
+  --dash-active-icon: #60a5fa;
+  --dash-hover-bg: rgba(255,255,255,0.05);
+  --dash-user-bg: #0f2340;
+  --dash-user-border: rgba(30,58,95,0.6);
+  --dash-user-text: #93c5fd;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-lime: var(--lime);
+  --color-lime-light: var(--lime-light);
+  --color-teal-accent: var(--teal-accent);
+  --color-teal-dark: var(--teal-dark);
   --color-blue-50: var(--blue-50);
   --color-blue-100: var(--blue-100);
   --color-blue-200: var(--blue-200);
@@ -46,15 +220,149 @@
   --color-gray-700: var(--gray-700);
   --color-gray-800: var(--gray-800);
   --color-gray-900: var(--gray-900);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-urbanist);
+  /* Dashboard theme tokens */
+  --color-dash-bg: var(--dash-bg);
+  --color-dash-card: var(--dash-card);
+  --color-dash-text: var(--dash-text);
+  --color-dash-text-secondary: var(--dash-text-secondary);
+  --color-dash-text-muted: var(--dash-text-muted);
+  --color-dash-border: var(--dash-border);
+  --color-dash-accent: var(--dash-accent);
+  --color-dash-accent-dark: var(--dash-accent-dark);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+  font-family: var(--font-urbanist), system-ui, sans-serif;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Scroll animation utility */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered children delays */
+.animate-on-scroll[data-delay="1"] { transition-delay: 0.1s; }
+.animate-on-scroll[data-delay="2"] { transition-delay: 0.2s; }
+.animate-on-scroll[data-delay="3"] { transition-delay: 0.3s; }
+.animate-on-scroll[data-delay="4"] { transition-delay: 0.4s; }
+.animate-on-scroll[data-delay="5"] { transition-delay: 0.5s; }
+.animate-on-scroll[data-delay="6"] { transition-delay: 0.6s; }
+
+/* Floating CTA pulse */
+@keyframes float-pulse {
+  0%, 100% { box-shadow: 0 4px 24px rgba(59, 130, 246, 0.35); }
+  50% { box-shadow: 0 8px 40px rgba(59, 130, 246, 0.55); }
+}
+
+.floating-cta {
+  animation: float-pulse 2.5s ease-in-out infinite;
+}
+
+/* ═══ BLUEPRINT ACCENTS ═══ */
+
+/* Subtle grid — like technical drawing paper */
+.bp-grid {
+  background-image:
+    linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Denser grid for hero area */
+.bp-grid-dense {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Corner bracket marks for cards */
+.bp-corners {
+  position: relative;
+}
+.bp-corners::before,
+.bp-corners::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+}
+.bp-corners::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1.5px solid #3B82F6;
+  border-left: 1.5px solid #3B82F6;
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+.bp-corners::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1.5px solid #3B82F6;
+  border-right: 1.5px solid #3B82F6;
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+.bp-corners:hover::before,
+.bp-corners:hover::after {
+  opacity: 0.7;
+}
+
+/* Thin technical divider line */
+.bp-divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.bp-divider::before {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.15), transparent);
+}
+.bp-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.15), transparent);
+}
+
+/* Crosshair mark */
+.bp-cross {
+  position: relative;
+}
+.bp-cross::before {
+  content: '+';
+  position: absolute;
+  font-size: 10px;
+  font-weight: 300;
+  color: rgba(59, 130, 246, 0.25);
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+/* Section label — technical style */
+.bp-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #3B82F6;
 }

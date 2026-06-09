@@ -26,6 +26,8 @@
 <div class="mf-badge"><span class="dot" id="bdot" style="background:#E0A52E"></span><span id="btext">…</span></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+  // Hide our own badge when framed inside the app (the app shows its own).
+  if (location.search.indexOf('chrome=0') >= 0) { const b = document.querySelector('.mf-badge'); if (b) b.style.display = 'none'; }
   const STATUS = {
     underway: { c: '#16A06E', label: 'Onderweg' },
     moored:   { c: '#2E6CB5', label: 'Afgemeerd' },

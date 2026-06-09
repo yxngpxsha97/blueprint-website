@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Marifest — iPhone preview</title>
+<style>
+  :root { --navy:#0F2A47; --ink:#0a1d33; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    background: radial-gradient(1200px 800px at 50% 0%, #14365a 0%, var(--navy) 45%, var(--ink) 100%);
+    color: #eaf1f8; min-height: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 36px 16px 48px; gap: 22px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand img { width: 38px; height: 38px; border-radius: 9px; }
+  .brand .name { font-size: 22px; font-weight: 800; letter-spacing: .04em; }
+  .brand .sub { font-size: 9px; letter-spacing: .28em; text-transform: uppercase; opacity: .65; margin-top: 3px; }
+  .switch { display: flex; gap: 6px; background: rgba(255,255,255,.06); padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,.09); }
+  .switch button {
+    appearance: none; border: 0; cursor: pointer; color: #cfe0f0;
+    background: transparent; font: inherit; font-size: 13px; font-weight: 600;
+    padding: 8px 16px; border-radius: 8px; transition: .15s;
+  }
+  .switch button.active { background: #2E6CB5; color: #fff; box-shadow: 0 4px 14px rgba(46,108,181,.4); }
+
+  .stage { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
+
+  /* iPhone 15 Pro frame */
+  .phone {
+    position: relative; width: 417px; height: 876px;
+    background: linear-gradient(145deg, #3a3a3e, #1a1a1c 40%, #2a2a2e);
+    border-radius: 58px; padding: 12px;
+    box-shadow: 0 50px 90px -20px rgba(0,0,0,.7), inset 0 0 0 2px rgba(255,255,255,.06);
+  }
+  .phone::before { /* side button right */
+    content:""; position:absolute; right:-3px; top:210px; width:3px; height:78px;
+    background:#26262a; border-radius:0 3px 3px 0;
+  }
+  .phone::after { /* volume buttons left */
+    content:""; position:absolute; left:-3px; top:180px; width:3px; height:54px;
+    background:#26262a; border-radius:3px 0 0 3px;
+    box-shadow: 0 78px 0 #26262a, 0 -120px 0 #26262a;
+  }
+  .screen {
+    position: relative; width: 393px; height: 852px;
+    border-radius: 47px; overflow: hidden; background: #0b1f36;
+  }
+  .island {
+    position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+    width: 124px; height: 35px; background: #000; border-radius: 20px; z-index: 30;
+  }
+  .screen iframe { width: 393px; height: 852px; border: 0; display: block; background: #fff; }
+  .caption { font-size: 12px; opacity: .6; text-align: center; max-width: 360px; line-height: 1.5; }
+  a.note { color: #7fc4ff; text-decoration: none; }
+</style>
+</head>
+<body>
+  <div class="brand">
+    <img src="/marifest-emblem.png" alt="" onerror="this.style.display='none'" />
+    <div><div class="name">Marifest</div><div class="sub">Maritime Intelligence</div></div>
+  </div>
+
+  <div class="switch">
+    <button id="b-app" class="active" onclick="setSrc('app')">📱 Native app</button>
+    <button id="b-web" onclick="setSrc('web')">🌐 Mobile web</button>
+  </div>
+
+  <div class="stage">
+    <div class="phone">
+      <div class="island"></div>
+      <div class="screen"><iframe id="frame" src="http://localhost:8088/" allow="geolocation"></iframe></div>
+    </div>
+  </div>
+
+  <div class="caption" id="cap">
+    Live Expo build running on <b>localhost:8088</b> — tap the PIN <b>2026</b> to enter. Fully interactive.
+  </div>
+
+<script>
+  const SRC = {
+    app: { url: 'http://localhost:8088/', cap: 'Native app — live Expo build on <b>localhost:8088</b>. PIN <b>2026</b> to enter. Fully interactive.' },
+    web: { url: 'http://localhost:3007/marifest-login', cap: 'Mobile-web / PWA — the dashboard at phone width, with the live Leaflet map. Click "Demo openen".' },
+  };
+  function setSrc(k) {
+    document.getElementById('frame').src = SRC[k].url;
+    document.getElementById('cap').innerHTML = SRC[k].cap;
+    document.getElementById('b-app').classList.toggle('active', k==='app');
+    document.getElementById('b-web').classList.toggle('active', k==='web');
+  }
+</script>
+</body>
+</html>

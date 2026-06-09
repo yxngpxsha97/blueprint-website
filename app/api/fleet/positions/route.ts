@@ -12,7 +12,6 @@
 // ============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@/lib/auth';
 import { CRUISE_SHIPS } from '@/lib/cruise-ships';
 import { buildMmsiIndex } from '@/lib/ship-mmsi';
 import WebSocket from 'ws';
@@ -516,13 +515,20 @@ async function fetchFromSupabase(): Promise<AisShipPosition[]> {
 // GET handler
 // ---------------------------------------------------------------------------
 
-export async function GET(_req: NextRequest) {
-  // Auth check — fleet data is only accessible to logged-in users
-  const session = await getSession();
-  if (!session) {
-    return NextResponse.json({ error: 'Niet ingelogd' }, { status: 401 });
-  }
+// Public CORS — Marifest is a public ship database; positions are open data
+// (auth + rate-limits arrive with paid accounts). Lets the mobile-web/PWA app
+// fetch positions cross-origin without a session cookie.
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
 
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS });
+}
+
+export async function GET(_req: NextRequest) {
   // Serve from cache if still fresh
   if (cache && (Date.now() - cache.fetchedAt) < CACHE_TTL_MS) {
     const ageSeconds = Math.floor((Date.now() - cache.fetchedAt) / 1000);
@@ -532,7 +538,7 @@ export async function GET(_req: NextRequest) {
       isLive: cache.isLive,
       cachedAgeSeconds: ageSeconds,
       fetchedAt: new Date(cache.fetchedAt).toISOString(),
-    });
+    }, { headers: CORS });
   }
 
   // Try live AIS data
@@ -570,7 +576,7 @@ export async function GET(_req: NextRequest) {
     isLive,
     cachedAgeSeconds: 0,
     fetchedAt: new Date(cache.fetchedAt).toISOString(),
-  });
+  }, { headers: CORS });
 }
 
 // Allow longer execution for WebSocket collection (Vercel Pro: up to 60s)

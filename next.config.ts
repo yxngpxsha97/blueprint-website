@@ -43,12 +43,22 @@ const nextConfig: NextConfig = {
   ],
   headers: async () => [
     {
-      source: '/(.*)',
+      // Global security headers — exclude the Marifest map embed, which is
+      // designed to be framed cross-origin by the mobile-web / PWA app.
+      source: '/((?!fleet-map-embed).*)',
       headers: [
         { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
         { key: 'X-Content-Type-Options', value: 'nosniff' },
         { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
         { key: 'X-XSS-Protection', value: '1; mode=block' },
+      ],
+    },
+    {
+      // Marifest map embed — framable anywhere (mobile-web map tab, PWA).
+      source: '/fleet-map-embed.html',
+      headers: [
+        { key: 'Content-Security-Policy', value: 'frame-ancestors *' },
+        { key: 'X-Content-Type-Options', value: 'nosniff' },
       ],
     },
     {

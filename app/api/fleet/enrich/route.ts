@@ -13,7 +13,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
-import { supabaseFetch } from '@/lib/supabase';
+import { marifestFetch as supabaseFetch } from '@/lib/marifest-supabase';
 
 const REFRESH_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 

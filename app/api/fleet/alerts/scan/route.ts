@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
 
-const SUPABASE_URL = process.env.SUPABASE_URL!;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY!;
+// Marifest project (DesignCheck org) — decoupled from Blueprint.
+const SUPABASE_URL = process.env.MARIFEST_SUPABASE_URL || 'https://bwegtwleqyfuyfkaluki.supabase.co';
+const SUPABASE_SERVICE_KEY = process.env.MARIFEST_SUPABASE_SERVICE_KEY!;
 
 function sbHeaders() {
   return {

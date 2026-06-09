@@ -40,6 +40,11 @@ const nextConfig: NextConfig = {
       source: '/sv-transport-preview',
       destination: '/sv-transport-preview/index.html',
     },
+    {
+      // Marifest phone app (Expo static web export) served under /marifest
+      source: '/marifest',
+      destination: '/marifest/index.html',
+    },
   ],
   headers: async () => [
     {

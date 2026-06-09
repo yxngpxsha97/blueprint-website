@@ -5,93 +5,94 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>Marifest globe</title>
 <style>
-  html, body { margin: 0; height: 100%; background: #060d18; overflow: hidden; }
+  html, body { margin: 0; height: 100%; background: #05080f; overflow: hidden; }
   #globe { width: 100vw; height: 100vh; }
   .mf-badge {
     position: absolute; top: 12px; left: 12px; z-index: 10;
     display: flex; align-items: center; gap: 6px;
     padding: 6px 11px; border-radius: 999px; font: 700 11px/1 -apple-system,"Segoe UI",system-ui,sans-serif;
     letter-spacing: .04em; color: #0F2A47; background: rgba(255,255,255,.92);
-    box-shadow: 0 2px 10px rgba(0,0,0,.3);
+    box-shadow: 0 2px 12px rgba(0,0,0,.4);
   }
   .mf-badge .dot { width: 7px; height: 7px; border-radius: 50%; }
-  .mf-tip {
-    font: 600 12px/1.35 -apple-system,"Segoe UI",system-ui,sans-serif; color: #fff;
-    background: rgba(15,42,71,.92); padding: 7px 10px; border-radius: 9px;
-    box-shadow: 0 6px 20px rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.12); max-width: 200px;
-  }
+  .mf-tip { font: 600 12px/1.35 -apple-system,"Segoe UI",system-ui,sans-serif; color: #fff;
+    background: rgba(15,42,71,.94); padding: 7px 10px; border-radius: 9px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.14); max-width: 210px; }
   .mf-tip b { color: #8ec5ff; }
-  .mf-tip span { display:block; font-weight: 500; opacity: .8; font-size: 11px; margin-top: 2px; }
+  .mf-tip span { display:block; font-weight: 500; opacity: .82; font-size: 11px; margin-top: 2px; }
 </style>
 </head>
 <body>
 <div id="globe"></div>
-<div class="mf-badge"><span class="dot" id="bdot" style="background:#E0A52E"></span><span id="btext">…</span></div>
+<div class="mf-badge"><span class="dot" id="bdot" style="background:#9CC4E4"></span><span id="btext">…</span></div>
 <script src="https://unpkg.com/globe.gl@2.34.4/dist/globe.gl.min.js"></script>
 <script>
-  const STATUS = {
-    underway: { c: '#2BD98A', label: 'Onderweg' },
-    moored:   { c: '#4FA3F0', label: 'Afgemeerd' },
-    anchored: { c: '#FFC94D', label: 'Voor anker' },
+  var SUPA = 'https://bwegtwleqyfuyfkaluki.supabase.co';
+  var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3ZWd0d2xlcXlmdXlma2FsdWtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5OTM5MzUsImV4cCI6MjA5NjU2OTkzNX0.aH47GDjg_EZz3eRWXeB8TC3T5deBfZkSpxxoDLRU2EE';
+  var params = new URLSearchParams(location.search);
+  var sector = (params.get('sector') || 'all').toLowerCase();
+  if (params.get('chrome') === '0') { var bb = document.querySelector('.mf-badge'); /* keep small badge */ }
+
+  // sector → colour (so a filtered view reads at a glance)
+  var SECTOR_COLORS = {
+    cruise:'#FFCF5C', passenger:'#37D99A', cargo:'#56A8FF', tanker:'#FF6B6B',
+    fishing:'#B98BD9', tug:'#F4A03C', offshore:'#2BD6D6', pleasure:'#FF9FD2',
+    naval:'#9FB1C0', special:'#D8B878', other:'#8FB3D4', null:'#7C9FC0'
   };
-  // Hide our own badge when framed inside the app (the app shows its own).
-  if (location.search.indexOf('chrome=0') >= 0) { const b = document.querySelector('.mf-badge'); if (b) b.style.display = 'none'; }
-  const el = document.getElementById('globe');
-  const world = Globe()(el)
+  function colorFor(s){ return SECTOR_COLORS[s && s.sector ? s.sector : 'null'] || '#8FB3D4'; }
+
+  var el = document.getElementById('globe');
+  var world = Globe()(el)
     .globeImageUrl('https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg')
     .bumpImageUrl('https://unpkg.com/three-globe@2.31.0/example/img/earth-topology.png')
     .backgroundImageUrl('https://unpkg.com/three-globe@2.31.0/example/img/night-sky.png')
     .showAtmosphere(true)
-    .atmosphereColor('#4a90d9')
-    .atmosphereAltitude(0.22)
-    .pointOfView({ lat: 30, lng: 0, altitude: 2.4 }, 0);
+    .atmosphereColor('#6db3f2')
+    .atmosphereAltitude(0.26)
+    .pointOfView({ lat: 25, lng: 10, altitude: 2.6 }, 0);
 
-  // gentle auto-rotation for the "wow"
-  world.controls().autoRotate = true;
-  world.controls().autoRotateSpeed = 0.45;
-  world.controls().enableDamping = true;
+  // HD touches: relief + ocean sheen on the globe material
+  try {
+    var mat = world.globeMaterial();
+    mat.bumpScale = 9;
+    mat.shininess = 14;
+    if (mat.specular && mat.specular.setHex) mat.specular.setHex(0x223a52);
+  } catch (e) {}
 
-  function size() { world.width(el.clientWidth).height(el.clientHeight); }
-  size();
-  window.addEventListener('resize', size);
+  var ctrl = world.controls();
+  ctrl.autoRotate = true; ctrl.autoRotateSpeed = 0.38; ctrl.enableDamping = true; ctrl.dampingFactor = 0.1;
+  ctrl.minDistance = 130; // don't let users zoom through the surface
+  world.onZoom(function(){ ctrl.autoRotate = false; });
 
-  function color(s) { return (STATUS[s.status] || STATUS.anchored).c; }
+  function size(){ world.width(el.clientWidth).height(el.clientHeight); }
+  size(); window.addEventListener('resize', size);
 
-  fetch('/api/fleet/positions')
-    .then(r => r.json())
-    .then(json => {
-      const ships = (json.data || []).filter(s => typeof s.lat === 'number' && typeof s.lng === 'number');
-      const live = json.isLive;
-      document.getElementById('btext').textContent = (live ? 'LIVE AIS' : 'SIMULATIE') + ' · ' + ships.length + ' schepen';
-      document.getElementById('bdot').style.background = live ? '#2BD98A' : '#FFC94D';
+  // sector filter (skip for 'all'); cap the 'all' view so mobile WebGL stays light
+  var url = SUPA + '/rest/v1/vessel_positions_geo?select=mmsi,imo,name,lat,lng,heading,speed,status,sector'
+    + (sector !== 'all' ? '&sector=eq.' + sector : '')
+    + '&limit=' + (sector !== 'all' ? 4000 : 2200);
+
+  fetch(url, { headers: { apikey: ANON, Authorization: 'Bearer ' + ANON } })
+    .then(function(r){ return r.json(); })
+    .then(function(arr){
+      var ships = (Array.isArray(arr) ? arr : []).filter(function(s){ return typeof s.lat === 'number' && typeof s.lng === 'number'; });
+      var label = sector === 'all' ? 'Alle sectoren' : sector.charAt(0).toUpperCase() + sector.slice(1);
+      document.getElementById('btext').textContent = label + ' · ' + ships.length + ' schepen';
+      document.getElementById('bdot').style.background = sector === 'all' ? '#56A8FF' : (SECTOR_COLORS[sector] || '#56A8FF');
 
       world
         .pointsData(ships)
         .pointLat('lat').pointLng('lng')
-        .pointColor(color)
-        .pointAltitude(0.012)
-        .pointRadius(0.32)
-        .pointLabel(s =>
-          '<div class="mf-tip"><b>' + (s.name || 'Onbekend schip') + '</b>' +
-          '<span>IMO ' + (s.imo || '—') + ' · ' + ((STATUS[s.status]||STATUS.anchored).label) + ' · ' + (s.speed ?? 0) + ' kn</span>' +
-          (s.destination ? '<span>→ ' + s.destination + '</span>' : '') + '</div>')
-        // radar-ping rings on each vessel for extra wow
-        .ringsData(ships)
-        .ringLat('lat').ringLng('lng')
-        .ringColor(s => (t => `rgba(${hexToRgb(color(s))},${1 - t})`))
-        .ringMaxRadius(2.2)
-        .ringPropagationSpeed(1.4)
-        .ringRepeatPeriod(1400);
-
-      // stop spinning while the user interacts, resume after
-      world.onZoom(() => { world.controls().autoRotate = false; });
+        .pointColor(colorFor)
+        .pointAltitude(0.008)        // barely raised — reads as a flat dot, no tall spikes when zoomed
+        .pointRadius(0.42)           // wide cap so low dots stay visible
+        .pointResolution(4)          // low-poly = light on mobile GPU
+        .pointLabel(function(s){
+          return '<div class="mf-tip"><b>' + (s.name || 'Onbekend schip') + '</b>' +
+            '<span>IMO ' + (s.imo || '—') + (s.sector ? ' · ' + s.sector : '') + ' · ' + (s.speed != null ? s.speed : 0) + ' kn</span></div>';
+        });
     })
-    .catch(() => { document.getElementById('btext').textContent = 'Geen verbinding'; });
-
-  function hexToRgb(h) {
-    const n = parseInt(h.slice(1), 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(',');
-  }
+    .catch(function(){ document.getElementById('btext').textContent = 'Geen verbinding'; });
 </script>
 </body>
 </html>

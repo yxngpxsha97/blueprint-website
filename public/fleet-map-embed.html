@@ -53,8 +53,10 @@
   [150, 500, 1200, 2500].forEach(t => setTimeout(refresh, t));
   window.addEventListener('load', refresh);
 
+  var SECTOR_COLORS = { cruise:'#E0A52E', passenger:'#16A06E', cargo:'#2E6CB5', tanker:'#C0392B', fishing:'#8E5BA6', tug:'#D9822B', offshore:'#159A9A', pleasure:'#D86FA8', naval:'#5B7184', special:'#A8853E', other:'#5E7C99' };
+  function mfColor(s){ return SECTOR_COLORS[s.sector] || '#5E7C99'; }
   function shipIcon(s) {
-    const col = (STATUS[s.status] || STATUS.anchored).c;
+    const col = mfColor(s);
     const rot = s.heading || 0;
     const html = '<div style="transform:rotate(' + rot + 'deg)">' +
       '<svg width="22" height="22" viewBox="0 0 24 24" style="filter:drop-shadow(0 1px 2px rgba(15,42,71,.35))">' +
@@ -63,13 +65,18 @@
     return L.divIcon({ html, className: '', iconSize: [22, 22], iconAnchor: [11, 11] });
   }
 
-  fetch('/api/fleet/positions')
+  var SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3ZWd0d2xlcXlmdXlma2FsdWtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5OTM5MzUsImV4cCI6MjA5NjU2OTkzNX0.aH47GDjg_EZz3eRWXeB8TC3T5deBfZkSpxxoDLRU2EE';
+  var mfSector = (new URLSearchParams(location.search).get('sector') || 'all').toLowerCase();
+  var mfUrl = 'https://bwegtwleqyfuyfkaluki.supabase.co/rest/v1/vessel_positions_geo?select=mmsi,imo,name,lat,lng,heading,speed,status,destination,source,sector'
+    + (mfSector !== 'all' ? '&sector=eq.' + mfSector : '') + '&limit=' + (mfSector !== 'all' ? 4000 : 2500);
+  fetch(mfUrl, { headers: { apikey: SUPA_ANON, Authorization: 'Bearer ' + SUPA_ANON } })
     .then(r => r.json())
+    .then(arr => ({ data: Array.isArray(arr) ? arr : [], isLive: Array.isArray(arr) && arr.some(function (s) { return s.source === 'live'; }) }))
     .then(json => {
       const ships = json.data || [];
-      const live = json.isLive;
-      document.getElementById('btext').textContent = (live ? 'LIVE AIS' : 'SIMULATIE') + ' · ' + ships.length + ' schepen';
-      document.getElementById('bdot').style.background = live ? '#16A06E' : '#E0A52E';
+      var lbl = mfSector === 'all' ? 'Alle' : mfSector.charAt(0).toUpperCase() + mfSector.slice(1);
+      document.getElementById('btext').textContent = lbl + ' · ' + ships.length + ' schepen';
+      document.getElementById('bdot').style.background = mfSector === 'all' ? '#2E6CB5' : (SECTOR_COLORS[mfSector] || '#2E6CB5');
       ships.forEach(s => {
         if (typeof s.lat !== 'number' || typeof s.lng !== 'number') return;
         const st = STATUS[s.status] || STATUS.anchored;

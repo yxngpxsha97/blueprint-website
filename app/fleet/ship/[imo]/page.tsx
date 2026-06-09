@@ -1,13 +1,19 @@
 import { Suspense } from 'react';
 import { requireAuth } from '@/lib/auth';
-import FleetDashboardClient from './fleet-dashboard-client';
+import ShipDetailClient from './ship-detail-client';
 
 export const metadata = {
-  title: 'Marifest — Dashboard',
+  title: 'Ship — Marifest',
 };
 
-export default async function FleetDashboardPage() {
-  const session = await requireAuth();
+export default async function ShipDetailPage({
+  params,
+}: {
+  params: Promise<{ imo: string }>;
+}) {
+  await requireAuth();
+  const { imo } = await params;
+
   return (
     <Suspense
       fallback={
@@ -19,7 +25,7 @@ export default async function FleetDashboardPage() {
         </div>
       }
     >
-      <FleetDashboardClient orgName={session.org_name} />
+      <ShipDetailClient imo={imo} />
     </Suspense>
   );
 }

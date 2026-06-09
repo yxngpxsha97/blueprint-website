@@ -12,7 +12,9 @@ export async function POST() {
     org_name: 'Marifest',
     user_name: 'Demo Operator',
     user_email: 'demo@marifest.app',
-    sector: 'tech',
+    // 'maritiem' grants /fleet (ships + vloot modules) but NOT /hq, which is gated
+    // on sector === 'tech' in middleware.ts. Keeps the demo cookie out of Blueprint HQ.
+    sector: 'maritiem',
     subscription_tier: 'enterprise',
     permissions: ['*'],
   };

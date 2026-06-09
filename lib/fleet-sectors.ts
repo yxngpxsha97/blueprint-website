@@ -117,6 +117,19 @@ export const FLEET_SECTORS: FleetSector[] = [
     icon: 'M2 17h20M4 17l1-6h14l1 6M8 11V8h8v3M13 5v3M13 5l3 3M13 5l-2 1',
     status: 'beta',
   },
+  {
+    id: 'fishing',
+    // Fishing trawler: hull with net gantry aft
+    label: 'Fishing',
+    description: 'Trawlers, seiners, factory ships — global fishing fleet',
+    vesselCount: null,
+    shipTypes: [30],
+    vesselSource: 'dynamic-ais',
+    accentColor: '#2E7D54',
+    accentSoft: 'rgba(46,125,84,0.08)',
+    icon: 'M2 18h20M4 18l1-6h11l3 6M7 12V9h6v3M15 7l3-3M18 4l1 2',
+    status: 'beta',
+  },
 ];
 
 export const DEFAULT_SECTOR_ID: SectorId = 'cruise';

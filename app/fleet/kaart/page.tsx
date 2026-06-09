@@ -11,13 +11,10 @@ export default async function KaartPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex-1 flex items-center justify-center" style={{ minHeight: '100vh', background: '#0A0F1E' }}>
+        <div className="fleet-root flex-1 flex items-center justify-center" style={{ minHeight: '100vh', background: 'var(--paper)' }}>
           <div className="flex flex-col items-center gap-3">
-            <div
-              className="w-8 h-8 border-2 rounded-full animate-spin"
-              style={{ borderColor: '#06B6D4', borderTopColor: 'transparent' }}
-            />
-            <span style={{ color: 'rgba(226,232,240,0.5)', fontSize: 13 }}>Loading map...</span>
+            <div className="fl-spinner" />
+            <span style={{ color: 'var(--muted)', fontSize: 13 }}>Loading map...</span>
           </div>
         </div>
       }

@@ -127,6 +127,7 @@ async function collectPassive(durationMs: number = 30_000): Promise<{
   totalCollected: number;
 }> {
   const AISSTREAM_API_KEY =
+    // TODO: rotate + remove once AISSTREAM_API_KEY is set in env
     process.env.AISSTREAM_API_KEY ?? '78c39db66176103aa332f8e22283099019eddc3e';
 
   let newShips = 0;

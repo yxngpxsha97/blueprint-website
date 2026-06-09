@@ -125,6 +125,7 @@ const nameIndex = new Map(
 
 async function fetchLivePositions(): Promise<AisShipPosition[]> {
   const AISSTREAM_API_KEY =
+    // TODO: rotate + remove once AISSTREAM_API_KEY is set in env
     process.env.AISSTREAM_API_KEY ?? '78c39db66176103aa332f8e22283099019eddc3e';
 
   const collected = new Map<string, AisShipPosition>(); // keyed by MMSI

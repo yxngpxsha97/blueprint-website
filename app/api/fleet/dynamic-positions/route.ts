@@ -98,6 +98,7 @@ const MID: Record<string, string> = {
 
 // Trigger a fresh AIS collection and populate discoveredShips
 async function triggerCollection(): Promise<void> {
+  // TODO: rotate + remove once AISSTREAM_API_KEY is set in env
   const AISSTREAM_API_KEY = process.env.AISSTREAM_API_KEY ?? '78c39db66176103aa332f8e22283099019eddc3e';
 
   return new Promise((resolve) => {
